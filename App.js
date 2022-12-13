@@ -10,6 +10,8 @@
 // })
 
 
+
+
 fetch("http://localhost:3000/posts/3", {
     method: 'GET',
     
@@ -41,8 +43,6 @@ fetch("http://localhost:3000/posts/3", {
     ul.appendChild(elementBody);
     ul.appendChild(elementAuthor1);
     ul.appendChild(elementComment1);
-    
-    
 })    
 })
 })
