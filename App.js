@@ -1,25 +1,37 @@
 
 
 let body = document.querySelector('#main-body');
+let loadMore1 = document.querySelector("#loadMore")
+let indexChange = 0
+let numShowPosts = 4
+let object = 0
 
-
-
+function numLoad() {
 fetch('http://localhost:3000/posts')
     .then(res => res.json())
     .then(json => {
-        json.map(data => {
-            console.log(data.title);
-            body.append(createHTML(data));
-        })
+        console.log(json);
+        for (index = indexChange; index < numShowPosts; index++) {
+            console.log(index);
+            body.append(createHTML(json[index]));    
+        }
     })
-
-
-
-function createHTML ({title,body}) {
+}
+    loadMore1.addEventListener("click" ,load)
+function load() {
+indexChange = indexChange+4
+numShowPosts = numShowPosts+4
+console.log(numShowPosts);
+numLoad()
+}
+window.onload = numLoad;
+function createHTML ({title,body,}) {
     let main = document.createElement('div');
     main.innerHTML = `<div class="container" >
         <div class="row bg-white mt-5 ">
             <div class="col-12">
+                <h5>Usuario</h5>
+                <h6 class="text-muted">Correo</h6>
                 <p>${title}</p>
                 <p>${body}</p>
                 <div class="d-grid gap-2 col-6 mx-auto">
@@ -73,9 +85,9 @@ function createHTML ({title,body}) {
             </div>
         </div>
         </div>
-    </div>`;
+    </div>
+    `;
     return main;
-    
 }
 
 
