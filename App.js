@@ -1,29 +1,50 @@
-
-
 let body = document.querySelector('#main-body');
+const posts = fetch('http://localhost:3000/posts');
+const users = fetch('http://localhost:3000/users');
+const comments = fetch('http://localhost:3000/comments');
+
+
+// fetch('http://localhost:3000/posts')
+//     .then(res => res.json())
+//     .then(json => {
+//         console.log(json)
+//         json.map(data => {    
+//             body.append(createHTML(data));
+//         })
+//     })
+
+
+Promise.all([posts, users, comments]).then(values => {
+    return Promise.all(values.map(data => data.json()));
+}).then(([posts, users, comments]) => {
+    let z = 0;
+    let j = 0;
+    for (let i = 0; i < posts.length; i++) {
+        const {id, title, body : postBody} = posts[i];
+        const {email : userMail, username : userUsername} = users[z];
+        const {name : commentName, body : commentBody, email : commentMail} = comments[j];
+        body.append(createHTML(title, postBody,id, userMail, userUsername, commentName, commentBody, commentMail));
+        z = z + 1;
+        j = j + 1;        
+    }});
+    
+    
+// });
 
 
 
-fetch('http://localhost:3000/posts')
-    .then(res => res.json())
-    .then(json => {
-        json.map(data => {
-            console.log(data.title);
-            body.append(createHTML(data));
-        })
-    })
-
-
-
-function createHTML ({title,body}) {
+function createHTML (title, postBody,id, userMail, userUsername, commentName, commentBody, commentMail) {
     let main = document.createElement('div');
-    main.innerHTML = `<div class="container" >
+    main.innerHTML = `
+    <div class="container" >
         <div class="row bg-white mt-5 ">
             <div class="col-12">
-                <p>${title}</p>
-                <p>${body}</p>
+                <p>${title}</p> 
+                <p>${userUsername}</p> 
+                <p>${userMail}</p>
+                <p>${postBody}</p>
                 <div class="d-grid gap-2 col-6 mx-auto">
-                    <button type="button" class="btn btn-Warning" data-bs-toggle="modal" data-bs-target="#ventanaModalPost">Show Post</button>
+                    <button type="button" class="btn btn-Warning" data-bs-toggle="modal" data-bs-target="#modal-${id}">Show Post</button>
                 </div>
                 <div class="border-bottom d-md-flex justify-content-md-end">
                 <button type="button" class="buttomEdit btn btn-outline-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#ventanaModalEdit" >Edit</button>
@@ -32,7 +53,7 @@ function createHTML ({title,body}) {
             </div>
         </div>
     </div>
-    <div class="modal fade" tabindex="-1" id="ventanaModalPost" role="dialog" aria-labelledby="tituloVentana" aria-hidden="true">
+    <div class="modal fade" tabindex="-1" id="modal-${id}" role="dialog" aria-labelledby="tituloVentana" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -40,7 +61,7 @@ function createHTML ({title,body}) {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            <p>${body}</p>
+            <p>${postBody}</p>
             </div>
             <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 Comentarios
@@ -48,7 +69,7 @@ function createHTML ({title,body}) {
             </p>
             <div class="collapse" id="collapseExample">
             <div class="card card-body">
-                Esto son los comentarios
+            ${commentBody}
             </div>
             </div>
             <div class="modal-footer">
@@ -74,70 +95,12 @@ function createHTML ({title,body}) {
         </div>
         </div>
     </div>`;
+
+
     return main;
-    
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // fetch("http://localhost:3000/posts").then(response => response.json()).then(data => {
-// //     post = data[2]
-// //     post = post.body
-// //     console.log(post)
-// // })
-
-
-
-
-// // fetch("http://localhost:3000/posts", {
-// //     method: 'GET',
-    
-// // }).then(response => response.json()).then(data => {
-// //     postTitle1 = document.querySelector('#title1');
-// //     postBody1 = document.querySelector("#body1");
-// //     title = data.title;
-// //     body = data.body;
-// //     title1.innerText = title;
-// //     postBody1.innerText = body;
-// // })
-
-
-
-    
-//     fetch("http://localhost:3000/users/2").then(response => response.json()).then(data => {
-//     username = data.username;
-//     email = data.email;
-//     elementUsername= document.createElement('li');
-//     elementEmail = document.createElement('li');
-//     elementUsername.innerText = `Username: ${username}`;
-//     elementEmail.innerText = `Title: ${email}`;
-//     fetch("http://localhost:3000/comments").then(response => response.json()).then(data => {
-//     author1 = data[200].email;
-//     comment1 = data[200].body;
-//     elementAuthor1= document.createElement('li');
-//     elementComment1 = document.createElement('li');
-//     elementAuthor1.innerText = `Author: ${author1}`;
-//     elementComment1.innerText = `Comment: ${comment1}`;
-//     ul.appendChild(elementUsername);
-//     ul.appendChild(elementEmail);
-//     ul.appendChild(elementTitle);
-//     ul.appendChild(elementBody);
-//     ul.appendChild(elementAuthor1);
-//     ul.appendChild(elementComment1);
-// })    
-// })
 
 
 
