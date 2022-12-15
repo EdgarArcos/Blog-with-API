@@ -1,63 +1,44 @@
-let body = document.querySelector('#main-body');
-const posts = fetch('http://localhost:3000/posts');
-const users = fetch('http://localhost:3000/users');
-const comments = fetch('http://localhost:3000/comments');
-
-
-// fetch('http://localhost:3000/posts')
-//     .then(res => res.json())
-//     .then(json => {
-//         console.log(json)
-//         json.map(data => {    
-//             body.append(createHTML(data));
-//         })
-//     })
-
 let loadMore1 = document.querySelector("#loadMore")
 let indexChange = 0
 let numShowPosts = 4
 let object = 0
+let body = document.querySelector('#main-body');
+let posts= []
+let users= []
+let comments= []
+const postsFetch = fetch('http://localhost:3000/posts');
+const usersFetch = fetch('http://localhost:3000/users');
+const commentsFetch = fetch('http://localhost:3000/comments');
 
-Promise.all([posts, users, comments]).then(values => {
-    return Promise.all(values.map(data => data.json()));
-}).then(([posts, users, comments]) => {
+async function fetcData() {
+    const fetchData= await Promise.all([postsFetch, usersFetch, commentsFetch]).then(values => {
+            return Promise.all(values.map(data => data.json()));
+        });
+        posts= fetchData[0]
+        users= fetchData[1]
+        comments= fetchData[2]
+        numLoad(indexChange,numShowPosts);
+}
+function numLoad(indexChange,numShowPosts) {
     let z = 0;
     let j = 0;
-    for (let i = 0; i < posts.length; i++) {
+    for (let i = indexChange; i < numShowPosts; i++) {
         const {id, title, body : postBody} = posts[i];
         const {email : userMail, username : userUsername} = users[z];
         const {name : commentName, body : commentBody, email : commentMail} = comments[j];
         body.append(createHTML(title, postBody,id, userMail, userUsername, commentName, commentBody, commentMail));
         z = z + 1;
         j = j + 1;        
-    }});
-    
-    
-// });
-
-
-
-function createHTML (title, postBody,id, userMail, userUsername, commentName, commentBody, commentMail) {
-function numLoad() {
-fetch('http://localhost:3000/posts')
-    .then(res => res.json())
-    .then(json => {
-        console.log(json);
-        for (index = indexChange; index < numShowPosts; index++) {
-            console.log(index);
-            body.append(createHTML(json[index]));    
-        }
-    })
+    }
 }
-    loadMore1.addEventListener("click" ,load)
+window.onload = fetcData();
+loadMore1.addEventListener("click" ,load) 
 function load() {
-indexChange = indexChange+4
-numShowPosts = numShowPosts+4
-console.log(numShowPosts);
-numLoad()
-}
-window.onload = numLoad;
-function createHTML ({title,body,}) {
+        indexChange = indexChange+4
+        numShowPosts = numShowPosts+4
+        numLoad(indexChange,numShowPosts)
+}    
+function createHTML (title, postBody,id, userMail, userUsername, commentName, commentBody, commentMail) {
     let main = document.createElement('div');
     main.innerHTML = `
     <div class="container" >
@@ -67,10 +48,6 @@ function createHTML ({title,body,}) {
                 <p>${userUsername}</p> 
                 <p>${userMail}</p>
                 <p>${postBody}</p>
-                <h5>Usuario</h5>
-                <h6 class="text-muted">Correo</h6>
-                <p>${title}</p>
-                <p>${body}</p>
                 <div class="d-grid gap-2 col-6 mx-auto">
                     <button type="button" class="btn btn-Warning" data-bs-toggle="modal" data-bs-target="#modal-${id}">Show Post</button>
                 </div>
@@ -114,7 +91,10 @@ function createHTML ({title,body,}) {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            <p>Noticia</p>
+            <h4>Tittle</h4>
+            <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+            <h4>Content</h4>
+            <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary">Save changes</button>
@@ -122,7 +102,6 @@ function createHTML ({title,body,}) {
             </div>
         </div>
         </div>
-    </div>'
-    `;
+    </div>`;
     return main;
-}}
+}
