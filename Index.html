@@ -9,13 +9,14 @@
     <script src="App.js" defer></script>
     <title>Blog</title>
 </head>
-<body id="main-body" class="bg-light">
+<body id="main" class="bg-light">
     <nav class="navbar bg-white">
         <div class="container-fluid"></div>
         <h4 class="col-sm-12 d-flex justify-content-center">LuEd Noticias</h4>
+        <button id="buttonID">BUTTON</button>
     </nav>
-    <main>
-    <!-- <div class="container" >
+    <main id="main-body"> 
+    <!-- <div class="container" class='buttonContainer'>
         <div class="row bg-white mt-5 ">
             <div class="col-12">
                 <p></p>
@@ -25,7 +26,7 @@
                 </div>
                 <div class="border-bottom d-md-flex justify-content-md-end">
                 <button type="button" class="buttomEdit btn btn-outline-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#ventanaModalEdit" >Edit</button>
-                <button type="button" class="buttomRemove btn btn-outline-danger btn-sm me-md-2">Remove</button>
+                <button type="button" class="buttomRemove btn btn-outline-danger btn-sm me-md-2" class='buttonRem'>Remove</button>
                 </div>
             </div>
         </div>
@@ -71,7 +72,10 @@
             </div>
         </div>
         </div>
-    </div>
-    </main> -->
+    </div>-->
+    </main> 
 </body>
+<div class="position-fixed fixed-bottom">
+<button class="btn-outline-success" type="button" style="margin-left: 2%"  id="loadMore">Load More</button>
+</div>
 </html>
