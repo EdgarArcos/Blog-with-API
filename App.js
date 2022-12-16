@@ -40,24 +40,32 @@ function numLoad(indexChange,numShowPosts) {
     }
 }
 
-
 window.onload = fetcData();
 loadMore1.addEventListener("click" ,load) 
 function load() {
         indexChange = indexChange+4
         numShowPosts = numShowPosts+4
-        numLoad(indexChange,numShowPosts)
 }    
 
 function deleteFuncion (e) {
     if (!e) {e=window.event}
     e.preventDefault();
+    let edit = "edit"
+    let save = "save"
     let idcontainer = e.target["id"]
-    let urlid = url+idcontainer
-    fetch(urlid,deletePost)
-    .then(function(response) {
-    }).catch(error => console.log(error));
+    if (idcontainer != edit) {
+        let urlid = url+idcontainer
+        fetch(urlid,deletePost)
+        .then(function() {
+        }).catch(error => console.log(error));
+    }
+    if (idcontainer === save) {
+        console.log("hola");
+    }
 };
+function editPost() {
+console.log(valor);
+}
 
 function createHTML (title, postBody,id, userMail, userUsername, commentName, commentBody, commentMail) {
     let main = document.createElement('div');
@@ -71,7 +79,7 @@ function createHTML (title, postBody,id, userMail, userUsername, commentName, co
                     <button type="button" class="btn btn-Warning" data-bs-toggle="modal" data-bs-target="#modal-${id}">Show Post</button>
                 </div>
                 <div class="border-bottom d-md-flex justify-content-md-end">
-                <button type="button" class="buttomEdit btn btn-outline-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#ventanaModalEdit" >Edit</button>
+                <button type="button" class="buttomEdit btn-primary" id="edit" btn btn-outline-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#ventanaModalEdit" >Edit</button>
                 <button type="button" id="${id}" class="buttomRemove btn btn-outline-danger btn-sm me-md-2">Remove</button>
                 </div>
             </div>
@@ -120,7 +128,7 @@ function createHTML (title, postBody,id, userMail, userUsername, commentName, co
             <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" id="save" class="btn btn-primary">Save changes</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -128,15 +136,3 @@ function createHTML (title, postBody,id, userMail, userUsername, commentName, co
     </div>`;
     return main;
 }
-
-
-
-
-
-
-
-
-
-
-
-
